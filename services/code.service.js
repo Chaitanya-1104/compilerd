@@ -9,6 +9,7 @@ const { PYTHON, PROMPTV1, PROMPTV2 } = require('../enums/supportedLanguages')
 const logger = require('../loader').helpers.l
 const OpenAI = require('openai')
 const openai = new OpenAI()
+// const openai = new OpenAIApi(configuration)
 const { LANGUAGES_CONFIG } = require('../configs/language.config')
 const Joi = require('joi')
 const memoryUsedThreshold = process.env.MEMORY_USED_THRESHOLD || 512
@@ -24,6 +25,19 @@ const supportedLanguages = require('../enums/supportedLanguages')
 const { generate } = require('@builder.io/sqlgenerate')
 const parser = require('sqlite-parser')
 const crypto = require('crypto')
+
+
+// const openaiApiKey = process.env.OPENAI_API_KEY
+// if (!openaiApiKey) {
+//     throw new Error('OpenAI API key is not set. Please check your environment variables.')
+// }
+
+// const configuration = new Configuration({
+//     apiKey: openaiApiKey,
+// })
+
+
+
 
 const _runScript = async (cmd, res, runMemoryCheck = false) => {
     let initialMemory = 0
@@ -395,7 +409,7 @@ const _getAiScore = async (langConfig, question, response, points, userAnswer, r
 
 const _executeStatement = (db, sql) => {
     return new Promise((resolve, reject) => {
-        db.all(sql, function(err, rows) {
+        db.all(sql, function (err, rows) {
             if (err) {
                 reject(err);
             } else {
@@ -834,9 +848,9 @@ const _executeMultiFile = async (req, res, response) => {
 
     try {
         let jasmineResults
-        if(req?.non_editable_files) {
+        if (req?.non_editable_files) {
             const isValidSubmission = await _checkIntegrity(req.non_editable_files)
-            if(!isValidSubmission) throw new Error(`A non editable file has been modified, exiting...`)
+            if (!isValidSubmission) throw new Error(`A non editable file has been modified, exiting...`)
         }
         if (req.type === FRONTEND_STATIC_JASMINE) {
             const staticServerInstance = await _startStaticServer(appConfig.multifile.staticServerPath)

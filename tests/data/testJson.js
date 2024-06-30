@@ -1,3 +1,5 @@
+const { CPP, C, PYTHON, JAVA, NODEJS, RUBY, PROMPTV1, PROMPTV2, GO, RUST, PHP} = require("../../enums/supportedLanguages")
+
 const testCases = [
     {
         name: 'cpp : hello world',
@@ -298,6 +300,170 @@ const testCases = [
             error: 0,
         },
     },
+    //new testcases for existing languages
+    {
+        name: 'cpp : empty',
+        reqObject: {
+            language: CPP,
+            script: '',
+        },
+        expectedResponse: {
+            val: '',
+            status: 400,
+            error: 1,
+        },
+    },
+    {
+        name: 'nodejs : syntax error',
+        reqObject: {
+            language: NODEJS,
+            script: 'console.log(hello)',
+        },
+        exceptedResponse: {
+            val: 'SyntaxError',
+            status: 400,
+            error: 1,
+        },
+    },
+    {
+        name: 'python : runtime error',
+        reqObject: {
+            language: PYTHON,
+            script: 'print(2/0)',
+
+        },
+        expectedResponse: {
+            val: 'Zerodivision error',
+            status: 400,
+            error: 1,
+        },
+    },
+    {
+        name: 'ruby : runtime error',
+        reqObject: {
+            language: RUBY,
+            script: 'puts 2/0',
+        },
+        exceptedResponse: {
+            val: 'zero division error',
+            status: 400,
+            error: 1,
+        },
+    },
+    {
+        name: 'java : syntax error',
+        reqObject: {
+            language: JAVA,
+            script: 'public class Solution { public static void main(String[] args) { System.out.println(hello world); } }',
+        },
+        expectedResponse: {
+            val: 'error: cannot find symbol\n',
+            status: 400,
+            error: 1,
+        },
+    },
+    {
+        name: 'c : syntax error',
+        reqObject: {
+            language: C,
+            script: '#include<stdio.h>\n int main() { printf(hello world); return 0; }',
+        },
+        expectedResponse: {
+            val: 'error: expected \')\' before \'hello\'',
+            status: 400,
+            error: 1,
+        },
+    },
+    {
+        name: 'nodejs : infinite loop',
+        reqObject: {
+            language: NODEJS,
+            script: 'while(true) {}',
+        },
+        expectedResponse: {
+            val: 'Time limit exceeded',
+            status: 200,
+            error: 1,
+        },
+    },
+    {
+        name: 'python : large output',
+        reqObject: {
+            language: PYTHON,
+            script: 'print("A" * 10**6)',
+        },
+        expectedResponse: {
+            val: 'A'.repeat(10**6) + '\n',
+            status: 200,
+            error: 0,
+        },
+    },
+    {
+        name: 'cpp : large input',
+        reqObject: {
+            language: CPP,
+            script: '#include<bits/stdc++.h>\nusing namespace std;\nint main() {\n int a;\n while(cin >> a) {\n cout << a << endl;\n }\n return 0;\n}',
+            stdin: Array(10**6).fill('1').join(' '),
+        },
+        expectedResponse: {
+            val: Array(10**6).fill('1').join('\n') + '\n',
+            status: 200,
+            error: 0,
+        },
+    },
+    {
+        name: 'ruby : large input',
+        reqObject: {
+            language: RUBY,
+            script: 'while line = gets\n puts line\n end',
+            stdin: Array(10**6).fill('1').join('\n'),
+        },
+        expectedResponse: {
+            val: Array(10**6).fill('1').join('\n') + '\n',
+            status: 200,
+            error: 0,
+        },
+    },
+
+    //testcases for newly included languages
+    // {
+    //     name: 'go : hello world',
+    //     reqObject: {
+    //         language: GO,
+    //         script: 'package main\nimport "fmt"\nfunc main() {\n    fmt.Println("hello world")\n}',
+    //     },
+    //     expectedResponse: {
+    //         val: 'hello world\n',
+    //         status: 200,
+    //         error: 0,
+    //     },
+    // },
+    // {
+    //     name: 'rust : hello world',
+    //     reqObject: {
+    //         language: RUST,
+    //         script: 'fn main() {\n    println!("hello world");\n}',
+    //     },
+    //     expectedResponse: {
+    //         val: 'hello world\n',
+    //         status: 200,
+    //         error: 0,
+    //     },
+    // },
+
+    // {
+    //     name: 'php : hello world',
+    //     reqObject: {
+    //         language: PHP,
+    //         script: '<?php echo "hello world"; ?>',
+    //     },
+    //     expectedResponse: {
+    //         val: 'hello world',
+    //         status: 200,
+    //         error: 0,
+    //     },
+    // },
+
 ]
 
 module.exports = { testCases }
